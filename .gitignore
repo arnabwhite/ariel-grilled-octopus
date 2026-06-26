@@ -1,0 +1,53 @@
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and editors
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.factorypath
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Maven (Backend)
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/.maven/
+
+# Node & Angular (Frontend)
+**/node_modules/
+**/dist/
+**/tmp/
+**/.angular/
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Temporary and local config files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local

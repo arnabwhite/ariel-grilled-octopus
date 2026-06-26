@@ -1,0 +1,148 @@
+<ng-container *ngIf="isCardView; else tableView">
+  <div class="group notion-card p-4.5 flex flex-col justify-between h-full min-h-[160px] relative transition-all duration-200">
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-[9px] font-bold tracking-widest text-[#787774] uppercase">
+          TASK #{{ task.id }}
+        </span>
+        
+        <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button 
+            *ngIf="canManageTask()"
+            (click)="onEditClick()"
+            class="p-1 rounded text-[#787774] hover:text-[#37352f] hover:bg-[rgba(55,53,47,0.06)] transition-colors cursor-pointer"
+            title="Edit Task"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
+          <button 
+            *ngIf="canManageTask()"
+            (click)="onDeleteClick()"
+            class="p-1 rounded text-[#787774] hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+            title="Delete Task"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-sm font-semibold text-[#37352f] leading-snug line-clamp-2">
+          {{ task.title }}
+        </h3>
+        <p class="text-xs text-[#787774] line-clamp-2 leading-relaxed">
+          {{ task.description || 'No description' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-4 pt-3 border-t border-[rgba(55,53,47,0.06)] flex items-center justify-between gap-2">
+      <div class="flex items-center gap-1.5 min-w-0">
+        <div class="h-4.5 w-4.5 rounded-full bg-[rgba(55,53,47,0.08)] flex items-center justify-center font-bold text-[8px] text-[#37352f] border border-[rgba(55,53,47,0.05)] shrink-0">
+          {{ task.assignedToEmail.substring(0, 1).toUpperCase() }}
+        </div>
+        <span class="text-[10px] text-[#787774] truncate" [title]="task.assignedToEmail">
+          {{ task.assignedToEmail.split('@')[0] }}
+        </span>
+      </div>
+
+      <div class="shrink-0">
+        <select 
+          *ngIf="canChangeStatus(); else statusLabel"
+          [ngModel]="task.status"
+          (ngModelChange)="onStatusSelect($event)"
+          class="border-none rounded px-2 py-0.5 text-[10px] font-bold tracking-wide focus:outline-none transition-all cursor-pointer select-none"
+          [class.tag-todo]="task.status === 'TODO'"
+          [class.tag-in-progress]="task.status === 'IN_PROGRESS'"
+          [class.tag-done]="task.status === 'DONE'"
+        >
+          <option value="TODO" class="bg-white text-amber-600 font-semibold">To Do</option>
+          <option value="IN_PROGRESS" class="bg-white text-blue-600 font-semibold">In Progress</option>
+          <option value="DONE" class="bg-white text-green-600 font-semibold">Done</option>
+        </select>
+        
+        <ng-template #statusLabel>
+          <span 
+            class="rounded px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider select-none" 
+            [class.tag-todo]="task.status === 'TODO'"
+            [class.tag-in-progress]="task.status === 'IN_PROGRESS'"
+            [class.tag-done]="task.status === 'DONE'"
+          >
+            {{ task.status.replace('_', ' ') }}
+          </span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #tableView>
+  <td class="py-2 px-4 text-[10px] font-bold text-[#787774] notion-border border-b uppercase">#{{ task.id }}</td>
+  <td class="py-2 px-4 font-semibold text-[#37352f] notion-border border-b truncate max-w-[200px]" [title]="task.title">
+    {{ task.title }}
+  </td>
+  <td class="py-2 px-4 text-[#787774] notion-border border-b">
+    <div class="flex items-center gap-2">
+      <div class="h-4.5 w-4.5 rounded-full bg-[rgba(55,53,47,0.08)] flex items-center justify-center text-[8px] text-[#37352f] font-bold border border-[rgba(55,53,47,0.05)]">
+        {{ task.assignedToEmail.substring(0, 1).toUpperCase() }}
+      </div>
+      <span class="truncate max-w-[120px]" [title]="task.assignedToEmail">{{ task.assignedToEmail }}</span>
+    </div>
+  </td>
+  <td class="py-2 px-4 text-[10px] text-[#787774] notion-border border-b">
+    {{ task.createdAt | date:'mediumDate' }}
+  </td>
+  <td class="py-2 px-4 notion-border border-b">
+    <select 
+      *ngIf="canChangeStatus(); else statusLabelTable"
+      [ngModel]="task.status"
+      (ngModelChange)="onStatusSelect($event)"
+      class="border-none rounded px-2 py-0.5 text-[10px] font-bold tracking-wide focus:outline-none transition-all cursor-pointer"
+      [class.tag-todo]="task.status === 'TODO'"
+      [class.tag-in-progress]="task.status === 'IN_PROGRESS'"
+      [class.tag-done]="task.status === 'DONE'"
+    >
+      <option value="TODO" class="bg-white text-amber-600 font-semibold">To Do</option>
+      <option value="IN_PROGRESS" class="bg-white text-blue-600 font-semibold">In Progress</option>
+      <option value="DONE" class="bg-white text-green-600 font-semibold">Done</option>
+    </select>
+    <ng-template #statusLabelTable>
+      <span 
+        class="rounded px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider" 
+        [class.tag-todo]="task.status === 'TODO'"
+        [class.tag-in-progress]="task.status === 'IN_PROGRESS'"
+        [class.tag-done]="task.status === 'DONE'"
+      >
+        {{ task.status.replace('_', ' ') }}
+      </span>
+    </ng-template>
+  </td>
+  <td class="py-2 px-4 text-right notion-border border-b">
+    <div class="flex items-center justify-end gap-1">
+      <button 
+        *ngIf="canManageTask()"
+        (click)="onEditClick()"
+        class="p-1 rounded text-[#787774] hover:text-indigo-600 hover:bg-slate-50 transition-colors cursor-pointer"
+        title="Edit"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+      </button>
+      <button 
+        *ngIf="canManageTask()"
+        (click)="onDeleteClick()"
+        class="p-1 rounded text-[#787774] hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+        title="Delete"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </button>
+    </div>
+  </td>
+</ng-template>

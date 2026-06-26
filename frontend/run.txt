@@ -1,0 +1,9 @@
+
+> frontend@0.0.0 start
+> ng serve
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [1.350 seconds] - 2026-06-26T17:58:36.638Z
+
+Watch mode enabled. Watching for file changes...

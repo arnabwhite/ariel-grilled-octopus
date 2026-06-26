@@ -1,0 +1,70 @@
+<div class="min-h-screen flex flex-col items-center justify-center px-4 bg-white text-[#37352f]">
+  
+  <div class="w-full max-w-[360px] space-y-8 py-12">
+    
+    <div class="text-center space-y-3">
+      <div class="h-12 w-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-500 shadow-sm mx-auto">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11a13.913 13.913 0 00-2.203-7.441m11.59 13.52a13.915 13.915 0 00-2.753-9.57m3.438 9.57L21 14h-3.32m-3.438-3c0-3.517 1.009-6.799 2.753-9.571M12 4c.828 0 1.5.895 1.5 2s-.672 2-1.5 2-1.5-.895-1.5-2 .672-2 1.5-2z" />
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-[#37352f]">Ariel</h1>
+      <p class="text-xs text-[#787774] font-medium uppercase tracking-wider">
+        One workspace. Every task.
+      </p>
+    </div>
+
+    <div *ngIf="errorMessage()" class="p-3 rounded border border-rose-200 bg-rose-50 text-rose-700 text-xs flex items-start gap-2.5">
+      <svg class="h-4 w-4 shrink-0 text-rose-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <span class="font-medium leading-relaxed">{{ errorMessage() }}</span>
+    </div>
+
+    <div *ngIf="successMessage()" class="p-3 rounded border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs flex items-start gap-2.5">
+      <svg class="h-4 w-4 shrink-0 text-emerald-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span class="font-medium leading-relaxed">{{ successMessage() }}</span>
+    </div>
+
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div class="space-y-1.5">
+        <label class="block text-xs font-semibold text-[#787774]">Email address</label>
+        <input 
+          type="email" 
+          formControlName="email"
+          placeholder="Enter your email..."
+          class="w-full bg-[#fbfbfa] hover:bg-[#f7f7f5] border border-[rgba(55,53,47,0.16)] rounded px-3 py-2 text-sm text-[#37352f] placeholder-[#a9a9a7] focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-[rgba(15,15,15,0.05)_0px_1px_2px_inset]"
+        />
+        <p class="text-rose-500 text-[10px] min-h-[14px] font-medium">{{ emailErrors }}</p>
+      </div>
+
+      <div class="space-y-1.5">
+        <label class="block text-xs font-semibold text-[#787774]">Password</label>
+        <input 
+          type="password" 
+          formControlName="password"
+          placeholder="Enter your password..."
+          class="w-full bg-[#fbfbfa] hover:bg-[#f7f7f5] border border-[rgba(55,53,47,0.16)] rounded px-3 py-2 text-sm text-[#37352f] placeholder-[#a9a9a7] focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-[rgba(15,15,15,0.05)_0px_1px_2px_inset]"
+        />
+        <p class="text-rose-500 text-[10px] min-h-[14px] font-medium">{{ passwordErrors }}</p>
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="isLoading() || authForm.invalid"
+        class="w-full bg-[#191919] hover:bg-[#252525] disabled:bg-[rgba(55,53,47,0.15)] disabled:text-[#a9a9a7] disabled:cursor-not-allowed text-white text-sm font-semibold rounded py-2 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <span *ngIf="isLoading()" class="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        <span>{{ isLoginMode() ? 'Sign In' : 'Sign Up' }}</span>
+      </button>
+    </form>
+
+    <div class="text-center pt-4 border-t border-[rgba(55,53,47,0.09)]">
+      <button (click)="toggleMode()" class="text-indigo-600 hover:text-indigo-500 text-xs font-semibold transition-colors cursor-pointer">
+        {{ isLoginMode() ? "Don't have an account? Sign up" : 'Already have an account? Sign in' }}
+      </button>
+    </div>
+  </div>
+</div>
