@@ -68,7 +68,7 @@ Masuk ke direktori `frontend`, pasang dependensi, lalu jalankan server pengemban
 ```bash
 cd frontend
 npm install
-npm run start
+npm start
 # atau
 ng serve
 ```
